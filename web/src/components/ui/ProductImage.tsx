@@ -4,9 +4,10 @@ type ProductImageProps = {
   src: string
   alt: string
   className?: string
+  loading?: 'eager' | 'lazy'
 }
 
-export function ProductImage({ src, alt, className = '' }: ProductImageProps) {
+export function ProductImage({ src, alt, className = '', loading = 'lazy' }: ProductImageProps) {
   const [failed, setFailed] = useState(false)
 
   if (failed) {
@@ -25,7 +26,7 @@ export function ProductImage({ src, alt, className = '' }: ProductImageProps) {
     <img
       src={src}
       alt={alt}
-      loading="lazy"
+      loading={loading}
       decoding="async"
       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 10vw"
       className={className}

@@ -7,7 +7,8 @@ export function ContactPage() {
       <title>{`Contact — ${store.brandName}`}</title>
       <h1 className="font-serif text-4xl text-forest">Contact</h1>
       <p className="mt-3 max-w-xl text-ink/70">
-        Use the form for a frontend demo response, or WhatsApp once the store number is configured.
+        Get in touch with questions about our products or your order. Send us a message or contact us
+        on WhatsApp.
       </p>
       <div className="mt-8">
         <ContactForm />

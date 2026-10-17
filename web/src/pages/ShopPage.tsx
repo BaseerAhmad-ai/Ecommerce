@@ -13,7 +13,7 @@ import {
 import type { ProductCategory } from '../types/product'
 
 function parseCategory(value: string | null): FilterState['category'] {
-  if (value === 'soaps' || value === 'oils' || value === 'skincare') return value
+  if (value === 'soaps' || value === 'oils') return value
   return 'all'
 }
 
@@ -62,8 +62,8 @@ export function ShopPage() {
       <title>{`${heading} — ${store.brandName}`}</title>
       <h1 className="font-serif text-4xl text-forest">{heading}</h1>
       <p className="mt-2 max-w-2xl text-ink/70">
-        Filter the demo catalog by name, category, price, and featured items. Prices are sample PKR
-        values.
+        Explore handmade soaps and natural oils for your daily routine. Browse by name, category, or
+        price to find what you need.
       </p>
       <div className="mt-6">
         <ProductFilters filters={filters} onChange={onChange} resultCount={results.length} />

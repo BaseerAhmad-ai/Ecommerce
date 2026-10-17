@@ -27,13 +27,15 @@ export function HomePage() {
           <FAQAccordion />
         </FadeIn>
       </section>
-      <section className="bg-white/60 py-16" aria-labelledby="home-contact">
+      <section className="bg-[#f0ede5] py-16" aria-labelledby="home-contact">
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <FadeIn>
             <h2 id="home-contact" className="font-serif text-3xl text-forest sm:text-4xl">
               Contact
             </h2>
-            <p className="mt-2 max-w-xl text-ink/70">Questions about a product or an order? Send a demo message or WhatsApp.</p>
+            <p className="mt-2 max-w-xl text-ink/70">
+              Questions about a product or order? Send us a message or contact us on WhatsApp.
+            </p>
           </FadeIn>
           <FadeIn delay={0.06} className="mt-8">
             <ContactForm />

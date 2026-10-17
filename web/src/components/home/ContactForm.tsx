@@ -1,4 +1,4 @@
-import { MessageCircle } from 'lucide-react'
+import { Mail, MapPin, MessageCircle } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { isWhatsAppConfigured, store } from '../../config/store'
 import { isNonEmpty, isValidEmail, isValidPakistaniPhone } from '../../utils/validation'
@@ -14,6 +14,8 @@ type FormState = {
 }
 
 const empty: FormState = { name: '', email: '', message: '', whatsapp: '' }
+const inputClass =
+  'h-12 w-full rounded-xl border border-forest/15 bg-cream px-4 text-sm text-ink outline-none transition placeholder:text-ink/40 hover:border-forest/30 focus:border-forest/40 focus:bg-white focus:ring-2 focus:ring-forest/10'
 
 export function ContactForm() {
   const [values, setValues] = useState<FormState>(empty)
@@ -57,23 +59,49 @@ export function ContactForm() {
     <div className="grid gap-8 lg:grid-cols-2">
       <form onSubmit={onSubmit} noValidate className="rounded-2xl bg-white p-5 sm:p-6">
         <div className="space-y-4">
-          <div>
-            <label htmlFor="contact-name" className="mb-1.5 block text-sm font-medium text-forest">
-              Full name
-            </label>
-            <input
-              id="contact-name"
-              value={values.name}
-              onChange={(event) => setValues((current) => ({ ...current, name: event.target.value }))}
-              className="h-11 w-full rounded-xl border border-forest/15 bg-cream px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-forest"
-              autoComplete="name"
-              required
-            />
-            {errors.name ? (
-              <p className="mt-1 text-sm text-ink" role="alert">
-                {errors.name}
-              </p>
-            ) : null}
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
+              <label htmlFor="contact-name" className="mb-1.5 block text-sm font-medium text-forest">
+                Full name
+              </label>
+              <input
+                id="contact-name"
+                value={values.name}
+                onChange={(event) => setValues((current) => ({ ...current, name: event.target.value }))}
+                className={inputClass}
+                autoComplete="name"
+                aria-invalid={Boolean(errors.name)}
+                aria-describedby={errors.name ? 'contact-name-error' : undefined}
+                required
+              />
+              {errors.name ? (
+                <p id="contact-name-error" className="mt-1 text-sm text-red-700" role="alert">
+                  {errors.name}
+                </p>
+              ) : null}
+            </div>
+            <div>
+              <label htmlFor="contact-whatsapp" className="mb-1.5 block text-sm font-medium text-forest">
+                WhatsApp
+              </label>
+              <input
+                id="contact-whatsapp"
+                type="tel"
+                value={values.whatsapp}
+                onChange={(event) => setValues((current) => ({ ...current, whatsapp: event.target.value }))}
+                className={inputClass}
+                autoComplete="tel"
+                placeholder="03XX XXXXXXX"
+                aria-invalid={Boolean(errors.whatsapp)}
+                aria-describedby={errors.whatsapp ? 'contact-whatsapp-error' : undefined}
+                required
+              />
+              {errors.whatsapp ? (
+                <p id="contact-whatsapp-error" className="mt-1 text-sm text-red-700" role="alert">
+                  {errors.whatsapp}
+                </p>
+              ) : null}
+            </div>
           </div>
           <div>
             <label htmlFor="contact-email" className="mb-1.5 block text-sm font-medium text-forest">
@@ -84,33 +112,15 @@ export function ContactForm() {
               type="email"
               value={values.email}
               onChange={(event) => setValues((current) => ({ ...current, email: event.target.value }))}
-              className="h-11 w-full rounded-xl border border-forest/15 bg-cream px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-forest"
+              className={inputClass}
               autoComplete="email"
+              aria-invalid={Boolean(errors.email)}
+              aria-describedby={errors.email ? 'contact-email-error' : undefined}
               required
             />
             {errors.email ? (
-              <p className="mt-1 text-sm text-ink" role="alert">
+              <p id="contact-email-error" className="mt-1 text-sm text-red-700" role="alert">
                 {errors.email}
-              </p>
-            ) : null}
-          </div>
-          <div>
-            <label htmlFor="contact-whatsapp" className="mb-1.5 block text-sm font-medium text-forest">
-              WhatsApp
-            </label>
-            <input
-              id="contact-whatsapp"
-              type="tel"
-              value={values.whatsapp}
-              onChange={(event) => setValues((current) => ({ ...current, whatsapp: event.target.value }))}
-              className="h-11 w-full rounded-xl border border-forest/15 bg-cream px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-forest"
-              autoComplete="whatsapp"
-              pattern="^\+[1-9]\d{7,14}$"
-              required
-            />
-            {errors.whatsapp ? (
-              <p className="mt-1 text-sm text-ink" role="alert">
-                {errors.whatsapp}
               </p>
             ) : null}
           </div>
@@ -123,17 +133,19 @@ export function ContactForm() {
               rows={5}
               value={values.message}
               onChange={(event) => setValues((current) => ({ ...current, message: event.target.value }))}
-              className="w-full rounded-xl border border-forest/15 bg-cream px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-forest"
+              className="w-full resize-y rounded-xl border border-forest/15 bg-cream px-4 py-3 text-sm text-ink outline-none transition placeholder:text-ink/40 hover:border-forest/30 focus:border-forest/40 focus:bg-white focus:ring-2 focus:ring-forest/10"
               required
+              aria-invalid={Boolean(errors.message)}
+              aria-describedby={errors.message ? 'contact-message-error' : undefined}
             />
             {errors.message ? (
-              <p className="mt-1 text-sm text-ink" role="alert">
+              <p id="contact-message-error" className="mt-1 text-sm text-red-700" role="alert">
                 {errors.message}
               </p>
             ) : null}
           </div>
         </div>
-        <Button type="submit" className="mt-5">
+        <Button type="submit" className="mt-6 w-full sm:w-auto">
           Send message
         </Button>
         {submitted ? (
@@ -142,26 +154,74 @@ export function ContactForm() {
           </p>
         ) : null}
       </form>
-      <div>
-        <p className="text-sm text-ink/75">
-          Email placeholder:{' '}
-          <a className="underline underline-offset-4" href={`mailto:${store.contactEmail}`}>
-            {store.contactEmailDisplay}
-          </a>
+      <div className="relative isolate overflow-hidden rounded-2xl bg-forest p-6 text-cream sm:p-8">
+        <div
+          aria-hidden="true"
+          className="absolute -right-16 -top-16 -z-10 h-56 w-56 rounded-full border border-cream/10"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -right-7 -top-7 -z-10 h-40 w-40 rounded-full border border-cream/10"
+        />
+        <p className="text-xs font-semibold tracking-[0.2em] text-cream/60 uppercase">
+          Contact details
         </p>
-        <p className="mt-2 text-sm text-ink/75">{store.addressLine}</p>
+        <h2 className="mt-2 font-serif text-3xl">Let’s talk</h2>
+        <p className="mt-3 max-w-sm text-sm leading-relaxed text-cream/75">
+          We’re happy to help with product questions, ingredients, or your order.
+        </p>
+        <div className="mt-8 space-y-5">
+          <a
+            href={`mailto:${store.contactEmail}`}
+            className="group flex items-start gap-3 rounded-xl border border-cream/10 bg-white/5 p-4 transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream/10 text-cream">
+              <Mail size={18} aria-hidden="true" />
+            </span>
+            <span className="min-w-0">
+              <span className="block text-xs font-medium tracking-wide text-cream/60 uppercase">
+                Email us
+              </span>
+              <span className="mt-1 block break-all text-sm font-medium text-cream">
+                {store.contactEmailDisplay}
+              </span>
+            </span>
+          </a>
+          <a
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('House 10, Street 135, G-13/4, Islamabad, Pakistan')}`}
+            target="_blank"
+            rel="noreferrer"
+            className="flex items-start gap-3 rounded-xl border border-cream/10 bg-white/5 p-4 transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"
+            aria-label="View Islamabad, Pakistan on Google Maps"
+          >
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-cream/10 text-cream">
+              <MapPin size={18} aria-hidden="true" />
+            </span>
+            <span>
+              <span className="block text-xs font-medium tracking-wide text-cream/60 uppercase">
+                Location
+              </span>
+              <span className="mt-1 block text-sm font-medium text-cream">Islamabad, Pakistan</span>
+            </span>
+          </a>
+        </div>
         {whatsappHref ? (
           <a
             href={whatsappHref}
             target="_blank"
             rel="noreferrer"
-            className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-full bg-sage px-5 py-2.5 text-sm font-medium text-forest"
+            className="mt-7 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-cream px-5 py-2.5 text-sm font-semibold text-forest transition hover:bg-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream sm:w-auto"
           >
             <MessageCircle size={18} aria-hidden="true" />
-            Message on WhatsApp
+            Chat with us
           </a>
         ) : null}
-        <SocialLinks className="mt-6" />
+        <div className="mt-7 border-t border-cream/15 pt-5">
+          <p className="mb-3 text-xs font-medium tracking-wide text-cream/60 uppercase">
+            Follow along
+          </p>
+          <SocialLinks className="text-cream" />
+        </div>
       </div>
     </div>
   )

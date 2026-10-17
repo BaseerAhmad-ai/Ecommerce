@@ -1,4 +1,4 @@
-export type ProductCategory = 'soaps' | 'oils' | 'skincare'
+export type ProductCategory = 'soaps' | 'oils'
 
 export type Product = {
   id: string

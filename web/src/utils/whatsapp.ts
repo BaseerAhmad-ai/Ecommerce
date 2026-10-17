@@ -27,7 +27,7 @@ export function buildOrderMessage(params: {
   const itemLines = params.lines
     .map(
       (line) =>
-        `• ${line.product.name} (${line.product.size}) × ${line.quantity} — ${formatPKR(line.lineTotal)}`,
+        `• ${line.product.name} (${line.product.size})\n  ${formatPKR(line.lineTotal / line.quantity)} each × ${line.quantity} = ${formatPKR(line.lineTotal)}`,
     )
     .join('\n')
 
@@ -56,7 +56,7 @@ export function buildOrderMessage(params: {
     `Delivery: ${formatPKR(params.deliveryFee)}`,
     `Total: ${formatPKR(params.total)}`,
     '',
-    'This message is prepared in the browser. Sending it on WhatsApp submits the request to the store. It is not an automatic order confirmation.',
+    'This order request is prepared in the browser. Sending it by email or WhatsApp does not automatically confirm the order.',
   ].join('\n')
 }
 

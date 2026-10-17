@@ -1,30 +1,15 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="780" viewBox="0 0 1200 780" role="img" aria-labelledby="title desc">
-  <title id="title">U&amp;M Organics</title>
-  <desc id="desc">U&amp;M Organics logo with two botanical leaves, the tagline Pure Natural Gentle, and a heart divider.</desc>
-  <defs>
-    <style>
-      .ink { fill: #092d2b; }
-      .serif { font-family: 'Bodoni MT', 'Didot', 'Times New Roman', serif; }
-      .sans { font-family: 'Montserrat', 'Arial', sans-serif; }
-      .script { font-family: 'Segoe Script', 'Brush Script MT', 'URW Chancery L', cursive; font-style: italic; }
-      .line { fill: none; stroke: #092d2b; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
-    </style>
-  </defs>
-  <rect width="1200" height="780" fill="#ffffff"/>
-  <!-- Botanical sprout mark -->
-  <g class="ink">
-    <path d="M 430,204 C 433,145 477,89 552,72 C 548,140 509,190 430,204 Z"/>
-    <path d="M 430,204 C 401,169 384,132 390,105 C 420,121 435,155 430,204 Z"/>
-  </g>
-  <path d="M 431,201 C 459,155 492,118 535,88" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
-  <path d="M 428,196 C 417,164 406,141 395,117" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
-  <!-- Main wordmark -->
-  <text x="600" y="380" text-anchor="middle" class="ink serif" font-size="224" font-weight="600" letter-spacing="-8">U&amp;M</text>
-  <text x="600" y="475" text-anchor="middle" class="ink sans" font-size="62" font-weight="500" letter-spacing="17">ORGANICS</text>
-  <!-- Tagline -->
-  <text x="600" y="572" text-anchor="middle" class="ink script" font-size="58" letter-spacing="0.5">Pure · Natural · Gentle</text>
-  <!-- Fine divider and heart -->
-  <path class="line" d="M 180,636 C 270,621 353,615 457,619"/>
-  <path class="line" d="M 743,619 C 847,615 930,621 1020,636"/>
-  <path class="line" d="M 600,655 C 582,638 552,619 552,597 C 552,573 581,570 600,593 C 619,570 648,573 648,597 C 648,619 618,638 600,655 Z"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <title>U&amp;M</title>
+  <circle cx="64" cy="64" r="62" fill="#092d2b" />
+  <text
+    x="64"
+    y="64"
+    fill="#ffffff"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="44"
+    font-weight="600"
+    letter-spacing="-2"
+    text-anchor="middle"
+    dominant-baseline="central"
+  >U&amp;M</text>
 </svg>

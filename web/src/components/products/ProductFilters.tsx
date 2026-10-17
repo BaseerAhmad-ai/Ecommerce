@@ -13,7 +13,6 @@ const categories: Array<{ value: FilterState['category']; label: string }> = [
   { value: 'all', label: 'All products' },
   { value: 'soaps', label: categoryLabels.soaps },
   { value: 'oils', label: categoryLabels.oils },
-  { value: 'skincare', label: categoryLabels.skincare },
 ]
 
 export function ProductFilters({ filters, onChange, resultCount }: ProductFiltersProps) {

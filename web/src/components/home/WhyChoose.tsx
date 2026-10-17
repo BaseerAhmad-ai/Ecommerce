@@ -13,8 +13,8 @@ const items = [
     icon: HandHeart,
   },
   {
-    title: 'Simple skincare choices',
-    copy: 'A focused catalog of soaps, oils, and a few essentials — easy to browse and compare.',
+    title: 'A focused collection',
+    copy: 'Handmade soaps and natural oils, easy to browse and compare.',
     icon: Sparkles,
   },
   {

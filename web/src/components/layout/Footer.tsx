@@ -55,11 +55,6 @@ export function Footer() {
                 Natural Oils
               </Link>
             </li>
-            <li>
-              <Link to="/shop?category=skincare" className="hover:text-white">
-                Skincare Essentials Soaps
-              </Link>
-            </li>
           </ul>
         </div>
         <div>

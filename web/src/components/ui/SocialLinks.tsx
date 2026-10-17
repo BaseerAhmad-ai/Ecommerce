@@ -28,7 +28,7 @@ export function SocialLinks({ className = '' }: { className?: string }) {
           rel="noreferrer"
           className="flex h-11 w-11 bg-gray-100 items-center justify-center rounded-full border border-forest/15 text-forest transition hover:bg-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
         >
-          <span className="sr-only">Instagram (placeholder link)</span>
+          <span className="sr-only">Instagram</span>
           <InstagramIcon />
         </a>
       </li>
@@ -39,7 +39,7 @@ export function SocialLinks({ className = '' }: { className?: string }) {
           rel="noreferrer"
           className="flex h-11 w-11 bg-gray-100  items-center justify-center rounded-full border border-forest/15 text-forest transition hover:bg-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
         >
-          <span className="sr-only">Facebook (placeholder link)</span>
+          <span className="sr-only">Facebook</span>
           <FacebookIcon />
         </a>
       </li>

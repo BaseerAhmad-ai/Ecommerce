@@ -1,3 +1,4 @@
+import emailjs from '@emailjs/browser'
 import { useMemo, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { CartSummary } from '../components/cart/CartSummary'
@@ -24,6 +25,9 @@ export function CheckoutPage() {
   const [details, setDetails] = useState<CheckoutDetails>(empty)
   const [errors, setErrors] = useState<FieldErrors>({})
   const [openedWhatsApp, setOpenedWhatsApp] = useState(false)
+  const [emailSent, setEmailSent] = useState(false)
+  const [submissionError, setSubmissionError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const configured = isWhatsAppConfigured()
 
   const message = useMemo(
@@ -37,6 +41,13 @@ export function CheckoutPage() {
       }),
     [details, resolved, totals],
   )
+
+  const updateDetails = (update: (current: CheckoutDetails) => CheckoutDetails) => {
+    setDetails(update)
+    setEmailSent(false)
+    setOpenedWhatsApp(false)
+    setSubmissionError('')
+  }
 
   const validate = (next: CheckoutDetails): FieldErrors => {
     const nextErrors: FieldErrors = {}
@@ -52,7 +63,7 @@ export function CheckoutPage() {
     return nextErrors
   }
 
-  const onSubmit = (event: FormEvent) => {
+  const onSubmit = async (event: FormEvent) => {
     event.preventDefault()
     const nextErrors = validate(details)
     setErrors(nextErrors)
@@ -61,9 +72,41 @@ export function CheckoutPage() {
 
     const url = getWhatsAppUrl(message)
     if (!url) return
-    // TODO: Submit orders to a backend and add payment + inventory sync when available.
-    window.open(url, '_blank', 'noopener,noreferrer')
-    setOpenedWhatsApp(true)
+    setIsSubmitting(true)
+    setSubmissionError('')
+    setEmailSent(false)
+    setOpenedWhatsApp(false)
+
+    const whatsAppWindow = window.open('about:blank', '_blank')
+    if (whatsAppWindow) whatsAppWindow.opener = null
+
+    try {
+      await emailjs.send(
+        'service_2h3wlal',
+        'template_hzj4803',
+        {
+          name: details.fullName.trim(),
+          email: details.email.trim(),
+          message,
+          whatsapp: details.phone.trim(),
+        },
+        'uY1ZDONOFzZYNibcw',
+      )
+      setEmailSent(true)
+      if (whatsAppWindow) {
+        whatsAppWindow.location.href = url
+        setOpenedWhatsApp(true)
+      }
+    } catch (error) {
+      whatsAppWindow?.close()
+      setSubmissionError(
+        error instanceof Error
+          ? `The order email could not be sent: ${error.message}`
+          : 'The order email could not be sent. Please try again.',
+      )
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (resolved.length === 0) {
@@ -84,13 +127,13 @@ export function CheckoutPage() {
       <title>{`Checkout — ${store.brandName}`}</title>
       <h1 className="font-serif text-4xl text-forest">Checkout</h1>
       <p className="mt-2 max-w-2xl text-ink/70">
-        Orders are sent on WhatsApp from this frontend. Opening the chat does not confirm the order
-        until you send the message.
+        Your order details are emailed to the store and prepared in WhatsApp. The order is not
+        confirmed until you send the WhatsApp message.
       </p>
       {!configured ? (
         <p className="mt-4 rounded-xl border border-dashed border-forest/30 bg-white px-4 py-3 text-sm text-forest" role="status">
-          Development warning: WhatsApp number is a placeholder. Replace <code>whatsappNumber</code> in{' '}
-          <code>src/config/store.ts</code> with digits only, for example 923001234567.
+          WhatsApp ordering is unavailable at the moment. Please contact us directly for help with
+          your order.
         </p>
       ) : null}
 
@@ -103,7 +146,7 @@ export function CheckoutPage() {
               value={details.fullName}
               error={errors.fullName}
               autoComplete="name"
-              onChange={(value) => setDetails((current) => ({ ...current, fullName: value }))}
+              onChange={(value) => updateDetails((current) => ({ ...current, fullName: value }))}
             />
             <Field
               id="phone"
@@ -111,7 +154,7 @@ export function CheckoutPage() {
               value={details.phone}
               error={errors.phone}
               autoComplete="tel"
-              onChange={(value) => setDetails((current) => ({ ...current, phone: value }))}
+              onChange={(value) => updateDetails((current) => ({ ...current, phone: value }))}
             />
             <Field
               id="email"
@@ -120,7 +163,7 @@ export function CheckoutPage() {
               value={details.email}
               error={errors.email}
               autoComplete="email"
-              onChange={(value) => setDetails((current) => ({ ...current, email: value }))}
+              onChange={(value) => updateDetails((current) => ({ ...current, email: value }))}
             />
             <Field
               id="city"
@@ -128,7 +171,7 @@ export function CheckoutPage() {
               value={details.city}
               error={errors.city}
               autoComplete="address-level2"
-              onChange={(value) => setDetails((current) => ({ ...current, city: value }))}
+              onChange={(value) => updateDetails((current) => ({ ...current, city: value }))}
             />
           </div>
           <div className="mt-4">
@@ -140,7 +183,7 @@ export function CheckoutPage() {
               rows={3}
               value={details.address}
               autoComplete="street-address"
-              onChange={(event) => setDetails((current) => ({ ...current, address: event.target.value }))}
+              onChange={(event) => updateDetails((current) => ({ ...current, address: event.target.value }))}
               className="w-full rounded-xl border border-forest/15 bg-cream px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-forest"
               required
             />
@@ -158,18 +201,39 @@ export function CheckoutPage() {
               id="notes"
               rows={3}
               value={details.notes}
-              onChange={(event) => setDetails((current) => ({ ...current, notes: event.target.value }))}
+              onChange={(event) => updateDetails((current) => ({ ...current, notes: event.target.value }))}
               className="w-full rounded-xl border border-forest/15 bg-cream px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-forest"
             />
           </div>
-          <Button type="submit" className="mt-6 w-full sm:w-auto" disabled={!configured}>
-            Review and send on WhatsApp
+          <Button type="submit" className="mt-6 w-full sm:w-auto" disabled={!configured || isSubmitting}>
+            {isSubmitting ? 'Sending order…' : 'Send order by email and WhatsApp'}
           </Button>
-          {openedWhatsApp ? (
-            <p className="mt-3 rounded-xl bg-sage/40 px-3 py-2 text-sm text-forest" role="status">
-              WhatsApp should now be open with your order summary. Please send the message to submit
-              the request. This is not an automatic confirmation, payment, or delivery booking.
+          {submissionError ? (
+            <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900" role="alert">
+              {submissionError}
             </p>
+          ) : null}
+          {emailSent ? (
+            <p className="mt-3 rounded-xl bg-sage/40 px-3 py-2 text-sm text-forest" role="status">
+              Order details emailed to the store.
+              {openedWhatsApp
+                ? ' WhatsApp is open with your order summary; send the message there to submit your request.'
+                : ' WhatsApp could not be opened automatically. Use the link below to send your order request.'}
+            </p>
+          ) : null}
+          {openedWhatsApp ? (
+            <p className="mt-2 text-xs text-ink/60">
+              Sending the WhatsApp message is still required; email is not an order confirmation.
+            </p>
+          ) : emailSent ? (
+            <a
+              href={getWhatsAppUrl(message) ?? undefined}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 inline-flex min-h-11 items-center text-sm text-forest underline"
+            >
+              Continue to WhatsApp
+            </a>
           ) : null}
         </form>
 
@@ -180,6 +244,9 @@ export function CheckoutPage() {
               <li key={line.product.id} className="flex justify-between gap-3 py-3">
                 <span>
                   {line.product.name} × {line.quantity}
+                  <span className="mt-1 block text-xs text-ink/60">
+                    {formatPKR(line.lineTotal / line.quantity)} each
+                  </span>
                 </span>
                 <span>{formatPKR(line.lineTotal)}</span>
               </li>

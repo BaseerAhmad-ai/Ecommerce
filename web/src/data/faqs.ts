@@ -12,7 +12,7 @@ export const faqs: FAQItem[] = [
   {
     question: 'Are the prices final?',
     answer:
-      'Prices shown in this demo are sample values in Pakistani Rupees. Replace them in the product data file before taking live orders.',
+      'Product prices are listed in Pakistani Rupees. Your order total, including delivery, is shown at checkout. We will confirm your order after you send the WhatsApp message and the store replies.',
   },
   {
     question: 'What can I expect from product details?',
@@ -27,6 +27,6 @@ export const faqs: FAQItem[] = [
   {
     question: 'How can I contact the store?',
     answer:
-      'Use the contact form for a frontend demo response, email the placeholder address, or message the configured WhatsApp number once it is replaced.',
+      'Send a message using the contact form, email us, or reach out on WhatsApp. Our contact details are listed on the Contact page.',
   },
 ]

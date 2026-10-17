@@ -4,20 +4,22 @@ import { ButtonLink } from '../ui/Button'
 import { FadeIn } from '../ui/FadeIn'
 
 export function FeaturedProducts() {
-  const featured = getFeaturedProducts().slice(0, 8)
+  const featured = getFeaturedProducts()
 
   return (
-    <section className="bg-white/50 py-16" aria-labelledby="featured-heading">
+    <section className="bg-[#f0ede5] py-16" aria-labelledby="featured-heading">
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <FadeIn className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 id="featured-heading" className="font-serif text-3xl text-forest sm:text-4xl">
               Featured products
             </h2>
-            <p className="mt-2 max-w-xl text-ink/70">A short selection from the current demo catalog.</p>
+            <p className="mt-2 max-w-xl text-ink/70">
+              Discover a selection of handmade soaps and natural oils for your daily routine.
+            </p>
           </div>
           <ButtonLink to="/shop" variant="ghost">
-            Browse the full catalog
+            Browse all products
           </ButtonLink>
         </FadeIn>
         <div className="mt-8">

@@ -20,7 +20,9 @@ export function ProductPage() {
       <div className="mx-auto max-w-3xl px-4 py-20 text-center">
         <title>{`Product not found — ${store.brandName}`}</title>
         <h1 className="font-serif text-3xl text-forest">Product not found</h1>
-        <p className="mt-3 text-ink/70">This item is not in the current demo catalog.</p>
+        <p className="mt-3 text-ink/70">
+          We couldn’t find that product. It may no longer be available.
+        </p>
         <Link to="/shop" className="mt-6 inline-flex min-h-11 items-center text-forest underline">
           Back to shop
         </Link>
@@ -46,7 +48,7 @@ export function ProductPage() {
         <ProductImage
           src={product.image}
           alt={product.imageAlt}
-          className="aspect-[4/5] w-full rounded-[2rem] object-cover"
+          className="aspect-4/5 w-full ro]unded-4xl object-cover"
         />
         <div>
           <p className="text-xs tracking-[0.18em] text-forest uppercase">
@@ -63,7 +65,7 @@ export function ProductPage() {
             <div>
               <dt className="text-ink/60">Availability</dt>
               <dd className="font-medium text-forest">
-                {product.available ? 'In stock for this demo' : 'Currently unavailable'}
+                {product.available ? 'Available' : 'Currently unavailable'}
               </dd>
             </div>
           </dl>
@@ -85,7 +87,6 @@ export function ProductPage() {
               Add to cart
             </Button>
           </div>
-          <p className="mt-3 text-xs text-ink/55">Sample price in PKR. Inventory is not synced between customers.</p>
         </div>
       </div>
       {related.length > 0 ? (

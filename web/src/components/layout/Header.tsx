@@ -1,7 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { Menu, Search, ShoppingBag, X } from 'lucide-react'
-import { useState } from 'react'
-import { NavLink } from 'react-router'
+import { useEffect, useState } from 'react'
+import { NavLink, useLocation } from 'react-router'
 import { store } from '../../config/store'
 import { useCart } from '../../hooks/useCart'
 import { CartDrawer } from '../cart/CartDrawer'
@@ -17,7 +17,7 @@ const navItems = [
   { to: '/contact', label: 'Contact' },
 ]
 
-function linkClass({ isActive }: { isActive: boolean }) {
+function linkClass(isActive: boolean) {
   return `rounded-full px-3 py-2 text-md transition focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${
     isActive ? 'text-forest font-medium' : 'text-ink/80 hover:text-forest'
   }`
@@ -25,32 +25,62 @@ function linkClass({ isActive }: { isActive: boolean }) {
 
 export function Header() {
   const { itemCount } = useCart()
+  const { pathname, search } = useLocation()
   const [menuOpen, setMenuOpen] = useState(false)
   const [cartOpen, setCartOpen] = useState(false)
   const [searchOpen, setSearchOpen] = useState(false)
   const reduceMotion = useReducedMotion()
 
   const closeMenu = () => setMenuOpen(false)
-// fgfdgdfgfdg
+
+  useEffect(() => {
+    if (!menuOpen) return
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMenuOpen(false)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [menuOpen])
+
+  useEffect(() => {
+    const onPopState = () => setMenuOpen(false)
+    window.addEventListener('popstate', onPopState)
+    return () => window.removeEventListener('popstate', onPopState)
+  }, [])
+
+  const isItemActive = (to: string, isActive: boolean) => {
+    if (to === '/shop') return isActive && !search
+    if (to.startsWith('/shop?category=')) {
+      return pathname === '/shop' && search === to.slice('/shop'.length)
+    }
+    return isActive
+  }
+
   return (
     <header className="sticky top-0 z-40 border-b border-forest/10 bg-cream/95 backdrop-blur">
-      <div className="mx-auto flex max-w-6xl items-center gap-3 px-4 py-4 sm:px-6">
+      <div className="mx-auto flex max-w-6xl items-center gap-2 px-3 py-2.5 sm:gap-3 sm:px-6 sm:py-4">
         <NavLink
           to="/"
-          className="font-serif text-xl text-forest sm:text-3xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+          className="shrink-0 rounded-sm font-serif text-xl text-forest focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest sm:text-3xl"
         >
           {store.brandName}
         </NavLink>
 
-        <nav className="ml-32 hidden items-center lg:flex" aria-label="Primary">
+        <nav className="ml-auto hidden items-center lg:flex" aria-label="Primary">
           {navItems.map((item) => (
-            <NavLink key={item.to + item.label} to={item.to} className={linkClass} end={item.to === '/'}>
+            <NavLink
+              key={item.to + item.label}
+              to={item.to}
+              onClick={closeMenu}
+              className={({ isActive }) => linkClass(isItemActive(item.to, isActive))}
+              end={item.to === '/' || item.to === '/shop'}
+            >
               {item.label}
             </NavLink>
           ))}
         </nav>
 
-        <div className="ml-auto flex items-center gap-1">
+        <div className="ml-auto flex shrink-0 items-center gap-0.5 sm:gap-1 lg:ml-6">
           <button
             type="button"
             onClick={() => setSearchOpen(true)}
@@ -92,24 +122,30 @@ export function Header() {
         </div>
       </div>
 
-      <AnimatePresence>
+      <AnimatePresence initial={false}>
         {menuOpen ? (
           <motion.nav
             id="mobile-menu"
-            aria-label="Mobile"
+            aria-label="Mobile primary"
             initial={reduceMotion ? false : { height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={reduceMotion ? { opacity: 0 } : { height: 0, opacity: 0 }}
-            className="overflow-hidden border-t border-forest/10 lg:hidden"
+            className="overflow-hidden border-t border-forest/10 bg-white/70 lg:hidden"
           >
-            <ul className="flex flex-col px-4 py-3">
+            <ul className="mx-auto grid max-w-6xl grid-cols-2 gap-1.5 px-3 py-3 sm:px-6 sm:py-4">
               {navItems.map((item) => (
                 <li key={item.label}>
                   <NavLink
                     to={item.to}
                     onClick={closeMenu}
-                    className="block min-h-11 rounded-xl px-3 py-3 text-base text-forest hover:bg-white"
-                    end={item.to === '/'}
+                    className={({ isActive }) =>
+                      `flex min-h-11 items-center rounded-xl px-4 py-3 text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${
+                        isItemActive(item.to, isActive)
+                          ? 'bg-sage/50 font-medium text-forest'
+                          : 'text-ink/80 hover:bg-cream hover:text-forest'
+                      }`
+                    }
+                    end={item.to === '/' || item.to === '/shop'}
                   >
                     {item.label}
                   </NavLink>
