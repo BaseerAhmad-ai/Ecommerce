@@ -2,9 +2,7 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { ButtonLink } from '../ui/Button'
 import { ProductImage } from '../ui/ProductImage'
 import { store } from '../../config/store'
-
-const heroImage =
-  'https://images.unsplash.com/photo-1600857544200-b2f666a9e2ce?auto=format&fit=crop&crop=center&w=1800&q=88'
+import heroImage from '../../assets/hero.svg'
 
 export function Hero() {
   const reduceMotion = useReducedMotion()
@@ -60,7 +58,7 @@ export function Hero() {
           <div className="relative overflow-hidden rounded-[1.5rem] shadow-[0_24px_70px_rgba(38,59,49,0.18)] sm:rounded-[2rem]">
             <ProductImage
               src={heroImage}
-              alt="Handmade soap bars styled for a natural self-care ritual"
+              alt="U&M handmade soap bars and natural oil arranged with botanical ingredients"
               loading="eager"
               className="aspect-[4/3] w-full object-cover sm:aspect-[5/4]"
             />
