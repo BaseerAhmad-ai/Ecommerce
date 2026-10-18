@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router'
 import { ProductFilters } from '../components/products/ProductFilters'
 import { ProductGrid } from '../components/products/ProductGrid'
+import { SeoMetadata } from '../components/layout/SeoMetadata'
 import { store } from '../config/store'
 import { categoryLabels } from '../data/products'
 import {
@@ -59,7 +60,23 @@ export function ShopPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <title>{`${heading} — ${store.brandName}`}</title>
+      <SeoMetadata
+        title={
+          filters.category === 'soaps'
+            ? `Handmade Soaps in Pakistan | ${store.brandName}`
+            : filters.category === 'oils'
+              ? `Natural Oils in Pakistan | ${store.brandName}`
+              : `Shop Handmade Soaps & Natural Oils | ${store.brandName}`
+        }
+        description={
+          filters.category === 'soaps'
+            ? 'Browse U&M handmade soap bars, including charcoal, rice, orange, rosemary, coffee, and lemon. View sizes, prices, and availability.'
+            : filters.category === 'oils'
+              ? 'Explore U&M hair and botanical oils, including U&M blended oil, rosemary oil, and coconut oil. View sizes, prices, and availability.'
+              : 'Shop U&M handmade soaps and natural oils. Browse product details, sizes, prices, and availability, with delivery across Pakistan.'
+        }
+        canonicalPath={filters.category === 'all' ? '/shop' : `/shop?category=${filters.category}`}
+      />
       <h1 className="font-serif text-4xl text-forest">{heading}</h1>
       <p className="mt-2 max-w-2xl text-ink/70">
         Explore handmade soaps and natural oils for your daily routine. Browse by name, category, or

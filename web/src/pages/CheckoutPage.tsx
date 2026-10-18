@@ -3,6 +3,8 @@ import { useMemo, useState, type FormEvent } from 'react'
 import { Link } from 'react-router'
 import { CartSummary } from '../components/cart/CartSummary'
 import { Button, ButtonLink } from '../components/ui/Button'
+import { SeoMetadata } from '../components/layout/SeoMetadata'
+import { emailJsConfig, isEmailJsConfigured } from '../config/emailjs'
 import { isWhatsAppConfigured, store } from '../config/store'
 import { useCart } from '../hooks/useCart'
 import { formatPKR } from '../utils/format'
@@ -29,6 +31,7 @@ export function CheckoutPage() {
   const [submissionError, setSubmissionError] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const configured = isWhatsAppConfigured()
+  const emailServiceReady = isEmailJsConfigured
 
   const message = useMemo(
     () =>
@@ -68,7 +71,10 @@ export function CheckoutPage() {
     const nextErrors = validate(details)
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
-    if (!configured) return
+    if (!configured || !emailServiceReady) {
+      setSubmissionError('Online ordering is temporarily unavailable. Please contact us directly.')
+      return
+    }
 
     const url = getWhatsAppUrl(message)
     if (!url) return
@@ -82,28 +88,24 @@ export function CheckoutPage() {
 
     try {
       await emailjs.send(
-        'service_2h3wlal',
-        'template_hzj4803',
+        emailJsConfig.serviceId,
+        emailJsConfig.templateId,
         {
           name: details.fullName.trim(),
           email: details.email.trim(),
           message,
           whatsapp: details.phone.trim(),
         },
-        'uY1ZDONOFzZYNibcw',
+        emailJsConfig.publicKey,
       )
       setEmailSent(true)
       if (whatsAppWindow) {
         whatsAppWindow.location.href = url
         setOpenedWhatsApp(true)
       }
-    } catch (error) {
+    } catch {
       whatsAppWindow?.close()
-      setSubmissionError(
-        error instanceof Error
-          ? `The order email could not be sent: ${error.message}`
-          : 'The order email could not be sent. Please try again.',
-      )
+      setSubmissionError('The order email could not be sent. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -112,7 +114,11 @@ export function CheckoutPage() {
   if (resolved.length === 0) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-        <title>{`Checkout — ${store.brandName}`}</title>
+        <SeoMetadata
+          title={`Checkout | ${store.brandName}`}
+          description="Complete your U&M order for handmade soaps and natural oils."
+          noIndex
+        />
         <h1 className="font-serif text-3xl text-forest">Your cart is empty</h1>
         <p className="mt-3 text-ink/70">Add products before checkout.</p>
         <ButtonLink to="/shop" className="mt-6">
@@ -124,7 +130,11 @@ export function CheckoutPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <title>{`Checkout — ${store.brandName}`}</title>
+      <SeoMetadata
+        title={`Checkout | ${store.brandName}`}
+        description="Complete your U&M order for handmade soaps and natural oils."
+        noIndex
+      />
       <h1 className="font-serif text-4xl text-forest">Checkout</h1>
       <p className="mt-2 max-w-2xl text-ink/70">
         Your order details are emailed to the store and prepared in WhatsApp. The order is not
@@ -134,6 +144,11 @@ export function CheckoutPage() {
         <p className="mt-4 rounded-xl border border-dashed border-forest/30 bg-white px-4 py-3 text-sm text-forest" role="status">
           WhatsApp ordering is unavailable at the moment. Please contact us directly for help with
           your order.
+        </p>
+      ) : null}
+      {!emailServiceReady ? (
+        <p className="mt-4 rounded-xl border border-dashed border-forest/30 bg-white px-4 py-3 text-sm text-forest" role="status">
+          Online ordering is temporarily unavailable. Please contact us directly.
         </p>
       ) : null}
 
@@ -205,7 +220,11 @@ export function CheckoutPage() {
               className="w-full rounded-xl border border-forest/15 bg-cream px-3 py-2 text-sm outline-none focus-visible:ring-2 focus-visible:ring-forest"
             />
           </div>
-          <Button type="submit" className="mt-6 w-full sm:w-auto" disabled={!configured || isSubmitting}>
+          <Button
+            type="submit"
+            className="mt-6 w-full sm:w-auto"
+            disabled={!configured || !emailServiceReady || isSubmitting}
+          >
             {isSubmitting ? 'Sending order…' : 'Send order by email and WhatsApp'}
           </Button>
           {submissionError ? (

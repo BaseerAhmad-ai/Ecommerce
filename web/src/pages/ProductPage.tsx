@@ -5,6 +5,7 @@ import { Button } from '../components/ui/Button'
 import { Price } from '../components/ui/Price'
 import { ProductImage } from '../components/ui/ProductImage'
 import { QuantitySelector } from '../components/ui/QuantitySelector'
+import { SeoMetadata } from '../components/layout/SeoMetadata'
 import { store } from '../config/store'
 import { useCart } from '../hooks/useCart'
 import { categoryLabels, getProductById, getRelatedProducts } from '../data/products'
@@ -18,7 +19,11 @@ export function ProductPage() {
   if (!product) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-        <title>{`Product not found — ${store.brandName}`}</title>
+        <SeoMetadata
+          title={`Product Not Found | ${store.brandName}`}
+          description="This product could not be found. Browse the U&M shop for handmade soaps and natural oils."
+          noIndex
+        />
         <h1 className="font-serif text-3xl text-forest">Product not found</h1>
         <p className="mt-3 text-ink/70">
           We couldn’t find that product. It may no longer be available.
@@ -34,7 +39,29 @@ export function ProductPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <title>{`${product.name} — ${store.brandName}`}</title>
+      <SeoMetadata
+        title={`${product.name} | ${categoryLabels[product.category]} in Pakistan | ${store.brandName}`}
+        description={`${product.name}: ${product.description} Size: ${product.size}. Check current price and availability from U&M in Pakistan.`}
+        image={product.image}
+        productSchema={{
+          '@type': 'Product',
+          name: product.name,
+          description: product.description,
+          image: new URL(product.image.startsWith('/') ? product.image : '/hero_normal.webp', window.location.origin).href,
+          sku: product.id,
+          category: categoryLabels[product.category],
+          brand: { '@type': 'Brand', name: store.brandName },
+          offers: {
+            '@type': 'Offer',
+            priceCurrency: store.currency,
+            price: product.salePrice ?? product.price,
+            availability: product.available
+              ? 'https://schema.org/InStock'
+              : 'https://schema.org/OutOfStock',
+            url: new URL(`/product/${product.id}`, window.location.origin).href,
+          },
+        }}
+      />
       <nav aria-label="Breadcrumb" className="text-sm text-ink/60">
         <Link to="/shop" className="hover:text-forest">
           Shop

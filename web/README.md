@@ -1,5 +1,12 @@
 # React + TypeScript + Vite
 
+## EmailJS configuration
+
+Copy `.env.example` to `.env` and set the EmailJS service ID, template ID, and public key before
+starting Vite or building the app. The local `.env` file is ignored by Git. These `VITE_` variables
+are included in the browser bundle, so the EmailJS public key is not a server-side secret; restrict
+it in EmailJS and use a backend if private credentials or server-enforced rate limiting are needed.
+
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
 Currently, two official plugins are available:

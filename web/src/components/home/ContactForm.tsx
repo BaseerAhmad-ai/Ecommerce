@@ -1,6 +1,7 @@
 import { Mail, MapPin, MessageCircle } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { isWhatsAppConfigured, store } from '../../config/store'
+import { emailJsConfig, isEmailJsConfigured } from '../../config/emailjs'
 import { isNonEmpty, isValidEmail, isValidPakistaniPhone } from '../../utils/validation'
 import { Button } from '../ui/Button'
 import { SocialLinks } from '../ui/SocialLinks'
@@ -11,9 +12,11 @@ type FormState = {
   email: string
   message: string
   whatsapp: string
+  website: string
 }
 
-const empty: FormState = { name: '', email: '', message: '', whatsapp: '' }
+const empty: FormState = { name: '', email: '', message: '', whatsapp: '', website: '' }
+const fieldLimits = { name: 100, email: 254, message: 1500, whatsapp: 20 }
 const inputClass =
   'h-12 w-full rounded-xl border border-forest/15 bg-cream px-4 text-sm text-ink outline-none transition placeholder:text-ink/40 hover:border-forest/30 focus:border-forest/40 focus:bg-white focus:ring-2 focus:ring-forest/10'
 
@@ -21,6 +24,9 @@ export function ContactForm() {
   const [values, setValues] = useState<FormState>(empty)
   const [errors, setErrors] = useState<Partial<FormState>>({})
   const [submitted, setSubmitted] = useState(false)
+  const [submissionError, setSubmissionError] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const emailServiceReady = isEmailJsConfigured
   const whatsappReady = isWhatsAppConfigured()
   const whatsappHref = whatsappReady
     ? `https://wa.me/${store.whatsappNumber}?text=${encodeURIComponent(`Hello ${store.brandName}, I have a question about your products.`)}`
@@ -29,35 +35,74 @@ export function ContactForm() {
   const validate = (next: FormState) => {
     const nextErrors: Partial<FormState> = {}
     if (!isNonEmpty(next.name)) nextErrors.name = 'Please enter your name.'
+    if (next.name.length > fieldLimits.name) nextErrors.name = 'Name must be 100 characters or fewer.'
     if (!isNonEmpty(next.whatsapp)) nextErrors.whatsapp = 'Please enter your WhatsApp number.'
     if (!isValidPakistaniPhone(next.whatsapp)) nextErrors.whatsapp = 'Please enter a valid WhatsApp number.'
+    if (next.whatsapp.length > fieldLimits.whatsapp) {
+      nextErrors.whatsapp = 'WhatsApp number must be 20 characters or fewer.'
+    }
     if (!isValidEmail(next.email)) nextErrors.email = 'Please enter a valid email address.'
+    if (next.email.length > fieldLimits.email) nextErrors.email = 'Email must be 254 characters or fewer.'
     if (next.message.trim().length < 8) nextErrors.message = 'Please write a short message.'
+    if (next.message.length > fieldLimits.message) {
+      nextErrors.message = 'Message must be 1500 characters or fewer.'
+    }
     return nextErrors
   }
 
-  const onSubmit = (event: FormEvent) => {
+  const onSubmit = async (event: FormEvent) => {
     event.preventDefault()
+    if (values.website || isSubmitting) return
+    if (!emailServiceReady) {
+      setSubmissionError('Messaging is temporarily unavailable. Please contact us directly.')
+      return
+    }
     const nextErrors = validate(values)
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) {
       setSubmitted(false)
       return
     }
-    // TODO: Submit contact messages to a backend when available.
-    emailjs.send("service_2h3wlal","template_hzj4803",{
-      name:values.name,
-      email: values.email,
-      message: values.message,
-      whatsapp:parseInt(values.whatsapp),
-    },'uY1ZDONOFzZYNibcw');
-    setSubmitted(true)
-    setValues(empty)
+
+    setIsSubmitting(true)
+    setSubmitted(false)
+    setSubmissionError('')
+    try {
+      await emailjs.send(
+        emailJsConfig.serviceId,
+        emailJsConfig.templateId,
+        {
+          name: values.name.trim(),
+          email: values.email.trim(),
+          message: values.message.trim(),
+          whatsapp: values.whatsapp.trim(),
+        },
+        emailJsConfig.publicKey,
+      )
+      setSubmitted(true)
+      setValues(empty)
+      setErrors({})
+    } catch {
+      setSubmissionError('Your message could not be sent. Please try again or contact us directly.')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   return (
     <div className="grid gap-8 lg:grid-cols-2">
       <form onSubmit={onSubmit} noValidate className="rounded-2xl bg-white p-5 sm:p-6">
+        <div className="sr-only" aria-hidden="true">
+          <label htmlFor="contact-website">Leave this field empty</label>
+          <input
+            id="contact-website"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={values.website}
+            onChange={(event) => setValues((current) => ({ ...current, website: event.target.value }))}
+          />
+        </div>
         <div className="space-y-4">
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
@@ -66,6 +111,7 @@ export function ContactForm() {
               </label>
               <input
                 id="contact-name"
+                maxLength={fieldLimits.name}
                 value={values.name}
                 onChange={(event) => setValues((current) => ({ ...current, name: event.target.value }))}
                 className={inputClass}
@@ -87,6 +133,7 @@ export function ContactForm() {
               <input
                 id="contact-whatsapp"
                 type="tel"
+                maxLength={fieldLimits.whatsapp}
                 value={values.whatsapp}
                 onChange={(event) => setValues((current) => ({ ...current, whatsapp: event.target.value }))}
                 className={inputClass}
@@ -110,6 +157,7 @@ export function ContactForm() {
             <input
               id="contact-email"
               type="email"
+              maxLength={fieldLimits.email}
               value={values.email}
               onChange={(event) => setValues((current) => ({ ...current, email: event.target.value }))}
               className={inputClass}
@@ -131,6 +179,7 @@ export function ContactForm() {
             <textarea
               id="contact-message"
               rows={5}
+              maxLength={fieldLimits.message}
               value={values.message}
               onChange={(event) => setValues((current) => ({ ...current, message: event.target.value }))}
               className="w-full resize-y rounded-xl border border-forest/15 bg-cream px-4 py-3 text-sm text-ink outline-none transition placeholder:text-ink/40 hover:border-forest/30 focus:border-forest/40 focus:bg-white focus:ring-2 focus:ring-forest/10"
@@ -145,9 +194,23 @@ export function ContactForm() {
             ) : null}
           </div>
         </div>
-        <Button type="submit" className="mt-6 w-full sm:w-auto">
-          Send message
+        <Button
+          type="submit"
+          className="mt-6 w-full sm:w-auto"
+          disabled={isSubmitting || !emailServiceReady}
+        >
+          {isSubmitting ? 'Sending message…' : 'Send message'}
         </Button>
+        {submissionError ? (
+          <p className="mt-3 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-900" role="alert">
+            {submissionError}
+          </p>
+        ) : null}
+        {!emailServiceReady ? (
+          <p className="mt-3 text-sm text-ink/70" role="status">
+            Messaging is temporarily unavailable. Please contact us directly.
+          </p>
+        ) : null}
         {submitted ? (
           <p className="mt-3 rounded-xl bg-sage/40 px-3 py-2 text-sm text-forest" role="status">
             Thank you for your message! We will get back to you as soon as possible.
@@ -188,7 +251,7 @@ export function ContactForm() {
             </span>
           </a>
           <a
-            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent('House 10, Street 135, G-13/4, Islamabad, Pakistan')}`}
+            href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(store.addressLine)}`}
             target="_blank"
             rel="noreferrer"
             className="flex items-start gap-3 rounded-xl border border-cream/10 bg-white/5 p-4 transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream"

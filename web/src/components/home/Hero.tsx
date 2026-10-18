@@ -2,14 +2,13 @@ import { motion, useReducedMotion } from 'framer-motion'
 import { ButtonLink } from '../ui/Button'
 import { ProductImage } from '../ui/ProductImage'
 import { store } from '../../config/store'
-import heroImage from '../../assets/hero.svg'
 
 export function Hero() {
   const reduceMotion = useReducedMotion()
 
   return (
-    <section className="overflow-hidden bg-[#f0ede5]">
-      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16 lg:py-20">
+    <section className="overflow-hidden bg-[linear-gradient(135deg,#f7f3eb_0%,#eee2d9_100%)]">
+      <div className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:py-20">
         <div className="relative z-10 py-2 lg:py-8">
           <motion.p
             initial={reduceMotion ? false : { opacity: 0, y: 12 }}
@@ -52,20 +51,16 @@ export function Hero() {
           initial={reduceMotion ? false : { opacity: 0, scale: 0.96 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="relative mx-auto w-full max-w-2xl"
+          className="relative mx-auto w-full max-w-2xl lg:pl-2"
         >
-          <div className="absolute -inset-3 translate-x-3 translate-y-3 rounded-[2rem] border border-brass/30 sm:-inset-4 sm:translate-x-4 sm:translate-y-4" />
-          <div className="relative overflow-hidden rounded-[1.5rem] shadow-[0_24px_70px_rgba(38,59,49,0.18)] sm:rounded-[2rem]">
+          <div className="absolute -inset-3 translate-x-3 translate-y-3 rounded-[2rem] border border-brass/35 sm:-inset-4 sm:translate-x-4 sm:translate-y-4" />
+          <div className="relative overflow-hidden rounded-[1.5rem] border border-white/70 bg-cream shadow-[0_24px_70px_rgba(38,59,49,0.18)] sm:rounded-[2rem]">
             <ProductImage
-              src={heroImage}
+              src="/hero_normal.webp"
               alt="U&M handmade soap bars and natural oil arranged with botanical ingredients"
               loading="eager"
-              className="aspect-[4/3] w-full object-cover sm:aspect-[5/4]"
+              className="aspect-video w-full object-cover"
             />
-          </div>
-          <div className="absolute -bottom-5 left-4 max-w-[15rem] rounded-xl border border-forest/5 bg-cream px-5 py-4 shadow-[0_12px_35px_rgba(38,59,49,0.12)] sm:bottom-6 sm:-left-8">
-            <p className="text-[10px] font-semibold tracking-[0.2em] text-brass uppercase">The everyday edit</p>
-            <p className="mt-1 font-serif text-lg text-forest">Simple care, made with intention.</p>
           </div>
         </motion.div>
       </div>

@@ -37,8 +37,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const totals = useMemo<CartTotals>(() => {
     const subtotal = resolved.reduce((sum, line) => sum + line.lineTotal, 0)
-    const qualifiesForFreeDelivery =
-      subtotal >= store.freeDeliveryThreshold && subtotal > 0
+    const qualifiesForFreeDelivery = itemCount >= store.freeDeliveryQuantity
     const deliveryFee = subtotal === 0 || qualifiesForFreeDelivery ? 0 : store.deliveryFee
     return {
       subtotal,
@@ -46,7 +45,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
       total: subtotal + deliveryFee,
       qualifiesForFreeDelivery,
     }
-  }, [resolved])
+  }, [itemCount, resolved])
 
   const addItem = useCallback(
     (productId: string, quantity = 1) => {

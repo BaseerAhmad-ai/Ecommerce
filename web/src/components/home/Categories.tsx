@@ -9,9 +9,8 @@ const categories = [
     eyebrow: 'THE DAILY ESSENTIAL',
     title: 'Handmade Soaps',
     copy: 'Small-batch bars, made for slower and softer routines.',
-    image:
-      'https://images.unsplash.com/photo-1600857544200-b2f666a9e2ce?auto=format&fit=crop&crop=center&w=1100&q=88',
-    alt: 'Stacked handmade soap bars',
+    image: '/handmad_soap_card.webp',
+    alt: 'An assortment of U&M handmade soap bars',
     number: '01',
   },
   {
@@ -19,9 +18,8 @@ const categories = [
     eyebrow: 'BOTANICAL BLENDS',
     title: 'Natural Oils',
     copy: 'Nourishing oils to bring a little nature to your care.',
-    image:
-      'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&crop=center&w=1100&q=88',
-    alt: 'Amber bottles of natural oil',
+    image: '/u&m_oil.webp',
+    alt: 'U&M premium blended oils',
     number: '02',
   },
 ]

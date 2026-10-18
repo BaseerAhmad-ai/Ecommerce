@@ -12,7 +12,7 @@ export const faqs: FAQItem[] = [
   {
     question: 'Are the prices final?',
     answer:
-      'Product prices are listed in Pakistani Rupees. Your order total, including delivery, is shown at checkout. We will confirm your order after you send the WhatsApp message and the store replies.',
+      'Product prices are listed in Pakistani Rupees. Delivery is PKR 300 for orders under 20 items and free for orders of 20 or more items. Your order total is shown at checkout. We will confirm your order after you send the WhatsApp message and the store replies.',
   },
   {
     question: 'What can I expect from product details?',
@@ -22,7 +22,7 @@ export const faqs: FAQItem[] = [
   {
     question: 'Do you deliver in Pakistan?',
     answer:
-      'This storefront is set up for customers in Pakistan. Delivery fees and a free-delivery threshold are configured in the store settings. Actual delivery times should be confirmed on WhatsApp.',
+      'This storefront is set up for customers in Pakistan. Delivery is charged for orders under 20 items and is free when your order includes 20 or more items. Confirm delivery timing on WhatsApp.',
   },
   {
     question: 'How can I contact the store?',

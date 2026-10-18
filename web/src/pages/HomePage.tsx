@@ -6,12 +6,16 @@ import { FeaturedProducts } from '../components/home/FeaturedProducts'
 import { Hero } from '../components/home/Hero'
 import { WhyChoose } from '../components/home/WhyChoose'
 import { FadeIn } from '../components/ui/FadeIn'
+import { SeoMetadata } from '../components/layout/SeoMetadata'
 import { store } from '../config/store'
 
 export function HomePage() {
   return (
     <>
-      <title>{`${store.brandName} — Handmade soaps and natural oils`}</title>
+      <SeoMetadata
+        title={`Handmade Soaps & Natural Oils in Pakistan | ${store.brandName}`}
+        description="Shop handmade soap bars and natural oils from U&M. Explore charcoal, rice, rosemary, and other soaps, plus hair and botanical oils. Based in Islamabad, Pakistan."
+      />
       <Hero />
       <Categories />
       <FeaturedProducts />

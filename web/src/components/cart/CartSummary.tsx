@@ -3,7 +3,8 @@ import { useCart } from '../../hooks/useCart'
 import { formatPKR } from '../../utils/format'
 
 export function CartSummary() {
-  const { totals } = useCart()
+  const { totals, itemCount } = useCart()
+  const itemsUntilFreeDelivery = Math.max(0, store.freeDeliveryQuantity - itemCount)
 
   return (
     <dl className="space-y-2 text-sm">
@@ -13,13 +14,21 @@ export function CartSummary() {
       </div>
       <div className="flex justify-between text-ink/80">
         <dt>Delivery</dt>
-        <dd>{totals.deliveryFee === 0 && totals.subtotal > 0 ? 'Free' : formatPKR(totals.deliveryFee)}</dd>
+        <dd>
+          {totals.subtotal === 0
+            ? '—'
+            : totals.qualifiesForFreeDelivery
+              ? 'Free'
+              : formatPKR(totals.deliveryFee)}
+        </dd>
       </div>
       {totals.qualifiesForFreeDelivery ? (
-        <p className="text-xs text-forest">Free delivery applied at {formatPKR(store.freeDeliveryThreshold)}.</p>
+        <p className="text-xs text-forest">
+          Free delivery applied for {store.freeDeliveryQuantity}+ items.
+        </p>
       ) : totals.subtotal > 0 ? (
         <p className="text-xs text-ink/60">
-          Free delivery from {formatPKR(store.freeDeliveryThreshold)}. Delivery is {formatPKR(store.deliveryFee)}.
+          Add {itemsUntilFreeDelivery} more {itemsUntilFreeDelivery === 1 ? 'item' : 'items'} for free delivery. Delivery is {formatPKR(store.deliveryFee)}.
         </p>
       ) : null}
       <div className="flex justify-between border-t border-forest/10 pt-3 font-medium text-forest">

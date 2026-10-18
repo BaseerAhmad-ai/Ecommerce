@@ -8,9 +8,9 @@ export function AboutPreview() {
     <section className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 sm:px-6 lg:grid-cols-2">
       <FadeIn>
         <ProductImage
-          src="https://images.unsplash.com/photo-1526947425960-945c6e72858f?auto=format&fit=crop&crop=center&w=1400&q=88"
-          alt="Natural oil and coconut ingredients arranged together"
-          className="aspect-[4/3] w-full rounded-[2rem] object-cover shadow-[0_20px_55px_rgba(38,59,49,0.12)]"
+          src="/about_us.webp"
+          alt="U&M soaps and hair oil with botanical ingredients"
+          className="aspect-[4/3] w-full rounded-[2rem] object-cover object-top shadow-[0_20px_55px_rgba(38,59,49,0.12)]"
         />
       </FadeIn>
       <FadeIn delay={0.08}>

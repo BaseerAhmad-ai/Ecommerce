@@ -10,17 +10,17 @@ export const store = {
   locale: 'en-PK',
   /** WhatsApp number in international format, digits only. */
   whatsappNumber: '923392143060',
-  contactEmailDisplay: 'uzmamoiz19@gmail.com',
+  contactEmailDisplay: 'umorganics@gmail.com',
   contactEmail: 'uzmamoiz19@gmail.com',
-  phoneDisplay: '+92 339 2143060',
+  phoneDisplay: '+920000000000',
   addressLine: 'Islamabad, Pakistan',
   announcement: 'Naturally Made. Thoughtfully Crafted.',
   deliveryFee: 300,
-  freeDeliveryThreshold: 50,
+  freeDeliveryQuantity: 20,
   maxQuantityPerItem: 100,
   social: {
-    instagram: 'https://www.instagram.com/',
-    facebook: 'https://www.facebook.com/',
+    instagram: 'https://www.instagram.com/uzmashahzadi32/',
+    facebook: 'https://web.facebook.com/uzma.shahzadi.278247',
   },
 } as const
 

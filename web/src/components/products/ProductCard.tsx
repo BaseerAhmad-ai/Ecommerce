@@ -24,23 +24,23 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
       <Link
         to={`/product/${product.id}`}
         aria-label={`View ${product.name}`}
-        className="relative block overflow-hidden bg-beige"
+        className="relative block w-full overflow-hidden bg-beige"
       >
         <ProductImage
           src={product.image}
           alt={product.imageAlt}
-          className="aspect-[4/3] w-full object-cover object-center transition duration-700 group-hover:scale-[1.05]"
+          className="block aspect-[4/3] w-full bg-beige object-cover transition duration-700 group-hover:scale-[1.03]"
         />
-        <span className="absolute left-3 top-3 rounded-full border border-white/50 bg-cream/90 px-3 py-1.5 text-[10px] font-semibold tracking-[0.12em] text-forest uppercase shadow-sm backdrop-blur">
+        <span className="absolute left-2 top-2 rounded-full border border-white/50 bg-cream/90 px-2.5 py-1 text-[9px] font-semibold tracking-[0.1em] text-forest uppercase shadow-sm backdrop-blur">
           {categoryLabels[product.category]}
         </span>
         {onSale ? (
-          <span className="absolute right-3 top-3 rounded-full bg-brass px-3 py-1.5 text-[10px] font-semibold tracking-[0.12em] text-white uppercase shadow-sm">
+          <span className="absolute right-2 top-2 rounded-full bg-brass px-2.5 py-1 text-[9px] font-semibold tracking-[0.1em] text-white uppercase shadow-sm">
             Special price
           </span>
         ) : null}
         {!product.available ? (
-          <span className="absolute right-3 top-3 rounded-full bg-ink/85 px-3 py-1.5 text-[10px] font-semibold tracking-[0.12em] text-cream uppercase shadow-sm">
+          <span className="absolute right-2 top-2 rounded-full bg-ink/85 px-2.5 py-1 text-[9px] font-semibold tracking-[0.1em] text-cream uppercase shadow-sm">
             Unavailable
           </span>
         ) : null}
@@ -48,46 +48,46 @@ export function ProductCard({ product, index = 0 }: { product: Product; index?: 
           <ArrowUpRight size={17} aria-hidden="true" />
         </span>
       </Link>
-      <div className="flex flex-1 flex-col p-5">
+      <div className="flex flex-1 flex-col p-3">
         <div className="flex flex-1 flex-col">
-          <div className="flex items-start justify-between gap-3">
-            <h3 className="font-serif text-[1.3rem] leading-tight text-forest">
-            <Link
-              to={`/product/${product.id}`}
-              className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
-            >
-              {product.name}
-            </Link>
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-serif text-base leading-tight text-forest">
+              <Link
+                to={`/product/${product.id}`}
+                className="rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest"
+              >
+                {product.name}
+              </Link>
             </h3>
-            <span className="shrink-0 rounded-full bg-cream px-2.5 py-1 text-[11px] font-medium text-ink/65">
+            <span className="shrink-0 rounded-full bg-cream px-2 py-0.5 text-[10px] font-medium text-ink/65">
               {product.category === 'soaps' ? '100g' : '100ml'}
             </span>
           </div>
-          <p className="mt-2 min-h-10 text-sm leading-5 text-ink/65 line-clamp-2">
+          <p className="mt-1 min-h-9 text-xs leading-4 text-ink/65 line-clamp-2">
             {product.shortDescription}
           </p>
         </div>
-        <div className="mt-4 flex items-center justify-between border-t border-forest/10 pt-4">
-          <span className="text-[10px] font-semibold tracking-[0.16em] text-ink/50 uppercase">Price</span>
-          <Price product={product} className="text-lg" />
+        <div className="mt-3 flex items-center justify-between border-t border-forest/10 pt-3">
+          <span className="text-[9px] font-semibold tracking-[0.14em] text-ink/50 uppercase">Price</span>
+          <Price product={product} className="text-base" />
         </div>
-        <div className="mt-4 flex flex-col gap-2 min-[420px]:flex-row">
+        <div className="mt-3 flex flex-col gap-2 min-[420px]:flex-row">
           <Button
             variant="primary"
-            className="w-full min-[420px]:flex-1"
+            className="min-h-9 w-full px-3 py-2 text-xs min-[420px]:flex-1"
             disabled={!product.available}
             onClick={() => addItem(product.id)}
           >
-            <Plus size={16} strokeWidth={2.2} aria-hidden="true" />
+            <Plus size={14} strokeWidth={2.2} aria-hidden="true" />
             Add to bag
           </Button>
           <Link
             to={`/product/${product.id}`}
             aria-label={`View details for ${product.name}`}
-            className="inline-flex min-h-11 w-full items-center justify-center gap-1 rounded-full border border-forest/15 px-4 py-2.5 text-sm font-medium text-forest transition hover:border-forest/30 hover:bg-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest min-[420px]:w-11 min-[420px]:shrink-0 min-[420px]:px-0"
+            className="inline-flex min-h-9 w-full items-center justify-center gap-1 rounded-full border border-forest/15 px-3 py-2 text-xs font-medium text-forest transition hover:border-forest/30 hover:bg-cream focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest min-[420px]:w-9 min-[420px]:shrink-0 min-[420px]:px-0"
           >
             <span className="min-[420px]:sr-only">Details</span>
-            <ArrowUpRight size={17} aria-hidden="true" />
+            <ArrowUpRight size={15} aria-hidden="true" />
           </Link>
         </div>
       </div>

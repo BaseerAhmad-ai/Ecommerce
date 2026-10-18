@@ -66,11 +66,16 @@ export function Footer() {
                 {store.contactEmailDisplay}
               </a>
             </li>
-           <a href={`https://wa.me/${store.whatsappNumber}?text=Hello%20I%20want%20to%20know%20more%20about%20your%20services`}
-       target="_blank"
-      >
-        {store.phoneDisplay}
-    </a>
+            <li>
+              <a
+                href={`https://wa.me/${store.whatsappNumber}?text=Hello%20I%20want%20to%20know%20more%20about%20your%20services`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-white"
+              >
+                {store.phoneDisplay}
+              </a>
+            </li>
           </ul>
           <SocialLinks className="mt-4 text-cream" />
         </div>

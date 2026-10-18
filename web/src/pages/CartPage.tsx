@@ -1,5 +1,6 @@
 import { CartItemRow } from '../components/cart/CartItem'
 import { CartSummary } from '../components/cart/CartSummary'
+import { SeoMetadata } from '../components/layout/SeoMetadata'
 import { ButtonLink } from '../components/ui/Button'
 import { store } from '../config/store'
 import { useCart } from '../hooks/useCart'
@@ -9,7 +10,11 @@ export function CartPage() {
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-      <title>{`Cart — ${store.brandName}`}</title>
+      <SeoMetadata
+        title={`Your Cart | ${store.brandName}`}
+        description="Review handmade soaps and natural oils in your U&M shopping cart."
+        noIndex
+      />
       <h1 className="font-serif text-4xl text-forest">Your cart</h1>
       {resolved.length === 0 ? (
         <div className="mt-10 rounded-2xl bg-white px-6 py-16 text-center">
